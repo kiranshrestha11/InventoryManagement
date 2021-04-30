@@ -5,7 +5,6 @@
  */
 package Interface;
 
-import static java.awt.Component.TOP_ALIGNMENT;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,28 +13,22 @@ import java.awt.print.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
-/**
- *
- * @author hjp
- */
 public class Sales extends javax.swing.JInternalFrame {
-
     /**
      * Creates new form AddItems
      */
     PreparedStatement pst = null;
     ResultSet rs = null;
     Connection con;
-
     private ImageIcon format = null;
     String fname = null;
     int s = 0;
@@ -58,7 +51,6 @@ public class Sales extends javax.swing.JInternalFrame {
         billHeader();
         autoId();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
         BasicInternalFrameUI bi = (BasicInternalFrameUI) this.getUI();
         bi.setNorthPane(null);
     }
@@ -194,12 +186,11 @@ public class Sales extends javax.swing.JInternalFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(79, 79, 79)
-                        .addComponent(lblsid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblsid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(lblimage, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(lblimage, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -230,18 +221,6 @@ public class Sales extends javax.swing.JInternalFrame {
             }
         });
 
-        txtname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtnameActionPerformed(evt);
-            }
-        });
-
-        txttprice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txttpriceActionPerformed(evt);
-            }
-        });
-
         txtnoofitem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtnoofitemMouseClicked(evt);
@@ -253,11 +232,6 @@ public class Sales extends javax.swing.JInternalFrame {
             }
         });
 
-        txtdis.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtdisActionPerformed(evt);
-            }
-        });
         txtdis.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtdisKeyReleased(evt);
@@ -273,11 +247,6 @@ public class Sales extends javax.swing.JInternalFrame {
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel16.setText("Total Amount");
 
-        txtcash.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtcashActionPerformed(evt);
-            }
-        });
         txtcash.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtcashKeyReleased(evt);
@@ -537,13 +506,8 @@ public class Sales extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtnameActionPerformed
-
     private void txtidKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtidKeyReleased
         if (txtid.getText().length() == 7) {
-
             itemLord();
         } else {
 
@@ -557,22 +521,22 @@ public class Sales extends javax.swing.JInternalFrame {
         txttprice.setText(tprice + "");
     }//GEN-LAST:event_txtnoofitemKeyReleased
 
-    private void txttpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttpriceActionPerformed
-
-    }//GEN-LAST:event_txttpriceActionPerformed
-
     private void txtdisKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdisKeyReleased
-        double discount = Double.parseDouble(txtdis.getText());
+        double d = Double.parseDouble(txtdis.getText());
         double tprice = Double.parseDouble(txttprice.getText());
-        double payble = tprice - discount;
-        txttotalAmount.setText(payble + "");
+        double p = tprice - d;
+        txttotalAmount.setText(p + "");
     }//GEN-LAST:event_txtdisKeyReleased
 
     private void txtcashKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcashKeyReleased
-        double cash = Double.parseDouble(txtcash.getText());
-        double payble = Double.parseDouble(txttotalAmount.getText());
-        double balance = payble - cash;
-        txtbalance.setText(balance + "");
+        if(evt==null){
+          JOptionPane.showMessageDialog(rootPane, "Cash column is empty");
+        }else{
+        double cashs = Double.parseDouble(txtcash.getText());
+        double paybles = Double.parseDouble(txttotalAmount.getText());
+        double balances = paybles - cashs;
+        txtbalance.setText(balances + ""); 
+        }     
     }//GEN-LAST:event_txtcashKeyReleased
 
     private void jPanel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel13MouseClicked
@@ -610,13 +574,8 @@ public class Sales extends javax.swing.JInternalFrame {
             pj.print();
         }
         catch(PrinterException ex){
-            ex.printStackTrace();
         }
-        /*try {
-            txtbill.print();
-        } catch (Exception e) {
-
-        }*/
+        
     }//GEN-LAST:event_jPanel12MouseClicked
     private void clearData() {
         txtid.setText("");
@@ -733,14 +692,6 @@ public class Sales extends javax.swing.JInternalFrame {
         }
         
     }
-    private void txtcashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcashActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtcashActionPerformed
-
-    private void txtdisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdisActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtdisActionPerformed
-
     private void txtnoofitemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtnoofitemMouseClicked
         txtnoofitem.setText("");
     }//GEN-LAST:event_txtnoofitemMouseClicked
@@ -774,8 +725,7 @@ public class Sales extends javax.swing.JInternalFrame {
             } else {
                 lblsid.setText("SID1000");
             }
-
-        } catch (Exception e) {
+        } catch (NumberFormatException | SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
             System.out.println(e.getMessage());
         }
