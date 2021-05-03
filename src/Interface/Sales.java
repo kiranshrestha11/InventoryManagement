@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Interface;
 
 import java.awt.Font;
@@ -14,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,15 +20,17 @@ public class Sales extends javax.swing.JInternalFrame {
     /**
      * Creates new form AddItems
      */
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime ldt = LocalDateTime.now();
+    String date=dtf.format(ldt);
+    
     PreparedStatement pst = null;
     ResultSet rs = null;
     Connection con;
     private ImageIcon format = null;
-    String fname = null;
-    int s = 0;
-    byte[] pimage = null;
+    //String fname = null;
+    //byte[] pimage = null;
 
-    //String billno="";
     Double amtafterdis, totalAmount = 0.0, cash1=0.0, balance1=0.0, bHeight=0.0;
     ArrayList<String> itemId = new ArrayList<>();
     ArrayList<String> itemName = new ArrayList<>();
@@ -42,8 +38,10 @@ public class Sales extends javax.swing.JInternalFrame {
     ArrayList<String> unitprice1 = new ArrayList<>();
     ArrayList<String> subtotal = new ArrayList<>();
     ArrayList<String> discount1 = new ArrayList<>();
+    
+    String iid,iname,iqty,iunitprice,iamt,idiscount,billno;
 
-    String sid, iid, unitprice, noofitem, totalprice, discount, payble, cash, balance, date;
+    //String sid, iid, unitprice, noofitem, totalprice, discount, payble, cash, balance;
 
     public Sales() {
         initComponents();
@@ -54,21 +52,7 @@ public class Sales extends javax.swing.JInternalFrame {
         BasicInternalFrameUI bi = (BasicInternalFrameUI) this.getUI();
         bi.setNorthPane(null);
     }
-
-    private void lordData() {
-        sid = lblsid.getText();
-        iid = txtid.getText();
-        unitprice = txtunitprice.getText();
-        noofitem = txtnoofitem.getText();
-        totalprice = txttprice.getText();
-        discount = txtdis.getText();
-        payble = txttotalAmount.getText();
-        cash = txtcash.getText();
-        balance = txtbalance.getText();
-        LocalDate ndate = LocalDate.now();
-        date = ndate + "";
-    }
-
+    
     private void itemLord() {
         try {
             String sql = "SELECT `item_name`, `sale_price`, `image`, `no_of_items` FROM `stock` WHERE item_id='" + txtid.getText() + "'";
@@ -87,7 +71,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 ImageIcon image = new ImageIcon(img2);
                 lblimage.setIcon(image);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
         }
     }
@@ -105,7 +89,7 @@ public class Sales extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         lblimage = new javax.swing.JLabel();
-        lblsid = new javax.swing.JLabel();
+        lblbill = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtbill = new javax.swing.JTextArea();
         jPanel10 = new javax.swing.JPanel();
@@ -159,8 +143,7 @@ public class Sales extends javax.swing.JInternalFrame {
         lblimage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblimage.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        lblsid.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblsid.setText("SID");
+        lblbill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         txtbill.setColumns(20);
         txtbill.setRows(5);
@@ -177,7 +160,7 @@ public class Sales extends javax.swing.JInternalFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(lblimage, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)
-                        .addComponent(lblsid, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblbill, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -186,7 +169,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(79, 79, 79)
-                        .addComponent(lblsid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblbill, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblimage, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -540,34 +523,22 @@ public class Sales extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtcashKeyReleased
 
     private void jPanel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel13MouseClicked
-        makeBill();
-        lordData();
+        //makeBill();
         try {
-            String q = "INSERT INTO `sale`(`sale_id`, `item_id`, `unit_price`, `no_of_item`, `total_price`, `discount`, `payable`, `cash`, `balance`, `date`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-            pst = con.prepareStatement(q);
-            pst.setString(1, sid);
-            pst.setString(2, iid);
-            pst.setString(3, unitprice);
-            pst.setString(4, noofitem);
-            pst.setString(5, totalprice);
-            pst.setString(6, discount);
-            pst.setString(7, payble);
-            pst.setString(8, cash);
-            pst.setString(9, balance);
-            pst.setString(10, date);
-            pst.execute();
-            System.out.println("Data inserted successfully");
+           String qr="INSERT INTO `total_sales`(`bill_no`, `total_amt`, `cash`, `balance`, `date`) VALUES ('"+lblbill.getText()+"','"+txttotalAmount.getText()+"','"+txtcash.getText()+"','"+txtbalance.getText()+"','"+date+"')";
+           pst=con.prepareStatement(qr);
+           pst.execute();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        clearData();
+        
     }//GEN-LAST:event_jPanel13MouseClicked
 
     private void jPanel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel12MouseClicked
+        getData();
+        getBillData();
         bHeight=Double.valueOf(itemName.size());
-        JOptionPane.showMessageDialog(rootPane, bHeight);
-        
         PrinterJob pj=PrinterJob.getPrinterJob();
         pj.setPrintable(new BillPrintable(),getPageFormat(pj));
         try{
@@ -575,22 +546,46 @@ public class Sales extends javax.swing.JInternalFrame {
         }
         catch(PrinterException ex){
         }
-        
+        clearData();
     }//GEN-LAST:event_jPanel12MouseClicked
+    private void getData(){
+        try{
+            String sql="SELECT `bill_no`, `item_id`, `item_name`, `unit_price`, `quantity`, `amount`, `discount` FROM `per_item_sales` WHERE bill_no='"+lblbill.getText()+"'";
+        pst=con.prepareStatement(sql);
+        rs=pst.executeQuery();
+        while(rs.next()){
+            itemId.add(rs.getString("item_id"));
+            itemName.add(rs.getString("item_name"));
+            unitprice1.add(rs.getString("unit_price"));
+            quantity.add(rs.getString("quantity"));
+            subtotal.add(rs.getString("amount"));
+            discount1.add(rs.getString("discount"));
+            }
+        }catch(SQLException ex){
+        }
+    }
+    private void getBillData(){
+        try{
+            String sql="SELECT `bill_no`, `total_amt`, `cash`, `balance`, `date` FROM `total_sales` WHERE bill_no='"+lblbill.getText()+"'";
+        pst=con.prepareStatement(sql);
+        rs=pst.executeQuery();
+        while(rs.next()){
+            totalAmount=rs.getDouble("total_amt");
+            cash1=rs.getDouble("cash");
+            balance1=rs.getDouble("balance");
+            
+        }
+        }catch(SQLException ex){
+        }
+    }
     private void clearData() {
-        txtid.setText("");
-        txtname.setText("");
-        txtunitprice.setText("");
-        txtnoofitem.setText("");
-        txttprice.setText("");
-        txtdis.setText("");
         txttotalAmount.setText("");
         txtcash.setText("");
         txtbalance.setText("");
-        lblimage.setIcon(null);
     }
     private void jPanel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel11MouseClicked
         autoId();
+        clear();
         clearData();
     }//GEN-LAST:event_jPanel11MouseClicked
     private void clear() {
@@ -603,16 +598,24 @@ public class Sales extends javax.swing.JInternalFrame {
         lblimage.setIcon(null);
     }
     private void jPanel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel14MouseClicked
-        itemId.add(txtid.getText());
-        itemName.add(txtname.getText());
-        unitprice1.add(txtunitprice.getText());
-        quantity.add(txtnoofitem.getText());
-        subtotal.add(txttprice.getText());
-        discount1.add(txtdis.getText());
+        iid=txtid.getText();
+        iname=txtname.getText();
+        iunitprice=txtunitprice.getText();
+        iqty=txtnoofitem.getText();
+        iamt=txttprice.getText();
+        idiscount=txtdis.getText();
+        billno=lblbill.getText();
         //amount after discount
         amtafterdis = Double.parseDouble(txttprice.getText()) - Double.parseDouble(txtdis.getText());
         totalAmount = totalAmount + amtafterdis;
         txttotalAmount.setText(totalAmount + "");
+        try{
+           String qr="INSERT INTO `per_item_sales`(`bill_no`, `item_id`, `item_name`, `unit_price`, `quantity`, `amount`, `discount`) VALUES ('"+billno+"','"+iid+"','"+iname+"','"+iunitprice+"','"+iqty+"','"+iamt+"','"+idiscount+"')";
+           pst=con.prepareStatement(qr);
+           pst.execute();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(rootPane,e);
+        }
         clear();
     }//GEN-LAST:event_jPanel14MouseClicked
     public PageFormat getPageFormat(PrinterJob pj){
@@ -638,11 +641,6 @@ public class Sales extends javax.swing.JInternalFrame {
     }
     
     public class BillPrintable implements Printable{
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime ndate = LocalDateTime.now();
-        
-        String datee=dtf.format(ndate);
-        
         @Override
         public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
             int r=itemName.size();
@@ -662,7 +660,7 @@ public class Sales extends javax.swing.JInternalFrame {
                     g2d.drawString("                        K & R Brothers Suppliers       ", 10, y);y+=yShift;
                     g2d.drawString("                            Damauli,Tanahun             ", 10, y);y+=yShift;
                     g2d.drawString("                        Vyas-2,Minraj Complex         ", 10, y);y+=yShift;
-                    g2d.drawString(""+datee+"", 73, y);y+=yShift;
+                    g2d.drawString(""+date+"", 73, y);y+=yShift;
                     g2d.drawString("_________________________________________", 12, y);y+=headerRectHeight;
                     g2d.drawString("Item Name                   Qty     price          amount", 12, y);y+=yShift;
                     g2d.drawString("_________________________________________", 12, y);y+=yShift;
@@ -709,21 +707,21 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void autoId() {
         try {
-            String sql = "SELECT `sale_id` FROM `sale` ORDER BY sale_id DESC LIMIT 1";
+            String sql = "SELECT `bill_no` FROM `total_sales` ORDER BY bill_no DESC LIMIT 1";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             if (rs.next()) {
-                String rnno = rs.getString("sale_id");
+                String rnno = rs.getString("bill_no");
                 int co = rnno.length();
-                String txt = rnno.substring(0, 3);
-                String num = rnno.substring(3, co);
+                //String txt = rnno.substring(0, 3);
+                String num = rnno.substring(0, co);
                 int n = Integer.parseInt(num);
                 n++;
                 String snum = Integer.toString(n);
-                String ftxt = txt + snum;
-                lblsid.setText(ftxt);
+                String ftxt =  snum;
+                lblbill.setText(ftxt);
             } else {
-                lblsid.setText("SID1000");
+                lblbill.setText("1000");
             }
         } catch (NumberFormatException | SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
@@ -754,8 +752,8 @@ public class Sales extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblbill;
     private javax.swing.JLabel lblimage;
-    private javax.swing.JLabel lblsid;
     private javax.swing.JTextField txtbalance;
     private javax.swing.JTextArea txtbill;
     private javax.swing.JTextField txtcash;

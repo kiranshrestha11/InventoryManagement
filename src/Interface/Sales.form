@@ -114,7 +114,7 @@
                           <Group type="102" attributes="0">
                               <Component id="lblimage" min="-2" pref="197" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="lblsid" min="-2" pref="92" max="-2" attributes="0"/>
+                              <Component id="lblbill" min="-2" pref="92" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="23" max="32767" attributes="0"/>
@@ -127,7 +127,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
-                              <Component id="lblsid" min="-2" pref="37" max="-2" attributes="0"/>
+                              <Component id="lblbill" min="-2" pref="37" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
@@ -152,12 +152,11 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblsid">
+            <Component class="javax.swing.JLabel" name="lblbill">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="SID"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
