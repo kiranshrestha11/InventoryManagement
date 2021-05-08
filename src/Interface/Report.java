@@ -28,17 +28,17 @@ public class Report extends javax.swing.JInternalFrame {
     public Report() {
         initComponents();
         con=DBConnect.connect();
-        saleLord();
-        stockLord();
+        salesLoad();
+        stockLoad();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         
         BasicInternalFrameUI bi= (BasicInternalFrameUI)this.getUI();
         bi.setNorthPane(null);
     }
     
-    private void saleLord(){
+    private void salesLoad(){
         try{
-            String sql="SELECT `sale_id`, `item_id`, `unit_price`, `no_of_item`, `total_price`, `discount`, `payable`, `cash`, `balance`, `date` FROM `sale`";
+            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_id, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM per_item_sales JOIN total_sales ON per_item_sales.bill_no=total_sales.bill_no";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -48,9 +48,9 @@ public class Report extends javax.swing.JInternalFrame {
         }
     }
     
-    private void stockLord(){
+    private void stockLoad(){
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items`, `image`, `mark` FROM `stock`";
+            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock`";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -420,7 +420,8 @@ public class Report extends javax.swing.JInternalFrame {
         String saleTDate=((JTextField)tdate.getDateEditor().getUiComponent()).getText();
         if(saleFDate.length()>0 && saleTDate.isEmpty()){
             try{
-            String sql="SELECT `sale_id`, `item_id`, `unit_price`, `no_of_item`, `total_price`, `discount`, `payable`, `cash`, `balance`, `date` FROM `sale` where date='"+saleFDate+"'";
+            //String sql="SELECT `bill_no`, `total_amt`, `cash`, `balance`, `date` FROM `total_sales` where date='"+saleFDate+"'";
+        String sql="SELECT per_item_sales.bill_no, per_item_sales.item_id, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM total_sales JOIN per_item_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE total_sales.date='"+saleFDate+"'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -430,7 +431,7 @@ public class Report extends javax.swing.JInternalFrame {
         }
         }else if(saleFDate.length()>0 && saleTDate.length()>0){
             try{
-            String sql="SELECT `sale_id`, `item_id`, `unit_price`, `no_of_item`, `total_price`, `discount`, `payable`, `cash`, `balance`, `date` FROM `sale` where date between '"+saleFDate+"' and '"+saleTDate+"'";
+            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_id, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM per_item_sales JOIN total_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE date between '"+saleFDate+"' and '"+saleTDate+"'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -448,7 +449,7 @@ public class Report extends javax.swing.JInternalFrame {
         String category=txtcategory.getText();
         if(txtcategory.getText().length()>0){
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items`, `image`, `mark` FROM `stock` where category LIKE '%"+category+"%'";
+            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` FROM `stock` where category LIKE '%"+category+"%'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -457,19 +458,19 @@ public class Report extends javax.swing.JInternalFrame {
             
         }
         }else{
-            stockLord();
+            stockLoad();
         }
     }//GEN-LAST:event_txtcategoryKeyReleased
 
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
         ((JTextField)fdate.getDateEditor().getUiComponent()).setText("");
         ((JTextField)tdate.getDateEditor().getUiComponent()).setText("");
-        saleLord();
+        salesLoad();
     }//GEN-LAST:event_jPanel7MouseClicked
 
     private void jPanel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel10MouseClicked
         txtcategory.setText("");
-        stockLord();
+        stockLoad();
     }//GEN-LAST:event_jPanel10MouseClicked
 
 

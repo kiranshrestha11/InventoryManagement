@@ -44,7 +44,7 @@ public class Stock extends javax.swing.JInternalFrame {
     }
     private void tableLord(){ 
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items` FROM `stock`";
+            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock`";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -365,7 +365,7 @@ public class Stock extends javax.swing.JInternalFrame {
     private void txtsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsearchKeyReleased
         if(txtsearch.getText().length()>0){ 
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items` FROM `stock` WHERE item_name LIKE '%"+txtsearch.getText()+"%'";
+            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock` WHERE item_name LIKE '%"+txtsearch.getText()+"%'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));

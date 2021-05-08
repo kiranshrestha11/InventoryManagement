@@ -31,6 +31,7 @@ public class Home extends javax.swing.JFrame {
             jDesktopPane1.removeAll();
         Main main=new Main();
         jDesktopPane1.add(main).setVisible(true);
+        btn1.setBackground(btnClick);
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -684,7 +685,8 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_btn6MouseClicked
 
     private void btn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn1MouseClicked
-        
+        Main main=new Main();
+        jDesktopPane1.add(main).setVisible(true);
         colorValue=1;
         dcolor();
         clickcolor();
