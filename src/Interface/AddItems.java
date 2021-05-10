@@ -27,7 +27,7 @@ public class AddItems extends javax.swing.JInternalFrame {
     
     PreparedStatement pst=null;
     ResultSet rs=null;
-    String iid,iname,category,purchasefrom,buyprice,sellprice,noofitem;
+    String iid,iname,category,purchasefrom,buyprice,sellprice,quantity;
     Connection con;
     
     private ImageIcon format=null;
@@ -158,7 +158,7 @@ public class AddItems extends javax.swing.JInternalFrame {
         jLabel6.setText("Selling Price");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setText("No. of Items");
+        jLabel7.setText("Quantity");
 
         txtname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,7 +166,7 @@ public class AddItems extends javax.swing.JInternalFrame {
             }
         });
 
-        cmbcategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Plywood", "CementBoard", "GypsumBoard", "TileBoard", "Doors(72*32)", "DoorFrame", "WindowFrame" }));
+        cmbcategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Plywood", "CementBoard", "GypsumBoard", "Gypsum TileBoard", "Doors", "DoorFrame", "WindowFrame", "Fevicol", "Door Handle", "Door Spring", "L-Drop", "Hinges", "Listi", "channel", "Wood screw", "Gypsum Screw", "Metal Screw", " " }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -333,11 +333,6 @@ public class AddItems extends javax.swing.JInternalFrame {
                 lblimageMouseClicked(evt);
             }
         });
-        lblimage.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentHidden(java.awt.event.ComponentEvent evt) {
-                lblimageComponentHidden(evt);
-            }
-        });
 
         jPanel9.setBackground(new java.awt.Color(136, 176, 207));
         jPanel9.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -453,7 +448,7 @@ public class AddItems extends javax.swing.JInternalFrame {
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
         getData();
         try{
-           String q="INSERT INTO `stock`(`item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items`, `image`, `mark` ) VALUES (?,?,?,?,?,?,?,?,?)";
+           String q="INSERT INTO `stock`(`item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` ) VALUES (?,?,?,?,?,?,?,?,?)";
            pst=con.prepareStatement(q);
            pst.setString(1,iid);
            pst.setString(2,iname);
@@ -461,7 +456,7 @@ public class AddItems extends javax.swing.JInternalFrame {
            pst.setString(4,purchasefrom);
            pst.setString(5,buyprice);
            pst.setString(6,sellprice);
-           pst.setString(7,noofitem);
+           pst.setString(7,quantity);
            pst.setBytes(8,pimage);
            pst.setString(9,"1");
            pst.execute();
@@ -477,16 +472,16 @@ public class AddItems extends javax.swing.JInternalFrame {
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
         getData();
         try{
-            String squpdate="UPDATE `stock` SET `item_name`=?, `category`=?, `purchase_from`=?, `buy_price`=?, `sale_price`=?, `no_of_items`=?, `image`=? WHERE item_id='"+txtid.getText()+"'";
+            String squpdate="UPDATE `stock` SET `item_name`=?, `category`=?, `purchase_from`=?, `buy_price`=?, `sale_price`=?, `quantity`=?, `image`=? WHERE item_id='"+txtid.getText()+"'";
            pst=con.prepareStatement(squpdate);
            pst.setString(1,iname);
            pst.setString(2,category);
            pst.setString(3,purchasefrom);
            pst.setString(4,buyprice);
            pst.setString(5,sellprice);
-           pst.setString(6,noofitem);
+           pst.setString(6,quantity);
            pst.setBytes(7,pimage);
-           pst.execute();
+           pst.executeUpdate();
            System.out.println("Data updated successfully");
         }
         catch(Exception e){
@@ -548,7 +543,6 @@ public class AddItems extends javax.swing.JInternalFrame {
             }
             pimage=baos.toByteArray();
             lblimage.setIcon(resizeImage(fname,buf));
-            image.delete();
         }catch(IOException e){
             System.out.println("Image not found");
         } 
@@ -556,10 +550,6 @@ public class AddItems extends javax.swing.JInternalFrame {
              
     
     }//GEN-LAST:event_lblimageMouseClicked
-
-    private void lblimageComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_lblimageComponentHidden
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblimageComponentHidden
 
     private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
         clearData();
@@ -583,7 +573,7 @@ public class AddItems extends javax.swing.JInternalFrame {
         int selectrowindex=tbladditem.getSelectedRow();
         id= (tmodel.getValueAt(selectrowindex, 0).toString());
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items`, `image`, `mark` FROM `stock` WHERE item_id='"+id+"'";
+            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` FROM `stock` WHERE item_id='"+id+"'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
             if(rs.next()){
@@ -593,16 +583,15 @@ public class AddItems extends javax.swing.JInternalFrame {
                 txtpurchasefrom.setText(rs.getString("purchase_from"));
                 txtbprice.setText(rs.getString("buy_price"));
                 txtsprice.setText(rs.getString("sale_price"));
-                txtnoofitems.setText(rs.getString("no_of_items")); 
-                
+                txtnoofitems.setText(rs.getString("quantity")); 
+                lblimage.setText("");
                 byte[] imagedata= rs.getBytes("image");
                 format=new ImageIcon(imagedata);
                 Image mm=format.getImage();
                 Image img2=mm.getScaledInstance(lblimage.getHeight(),lblimage.getWidth(),Image.SCALE_SMOOTH);
                 ImageIcon image=new ImageIcon(img2);
                 lblimage.setIcon(image);
-                lblimage.setText("");
-            }
+                }
         }catch(Exception e){
             JOptionPane.showMessageDialog(rootPane, e);
         }
@@ -610,7 +599,7 @@ public class AddItems extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tbladditemMouseClicked
     private void tableLord(){
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `no_of_items`, `image`, `mark` FROM `stock";
+            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` FROM `stock";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tbladditem.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -628,7 +617,7 @@ public class AddItems extends javax.swing.JInternalFrame {
             purchasefrom=txtpurchasefrom.getText();
             buyprice=txtbprice.getText();
             sellprice=txtsprice.getText();
-            noofitem=txtnoofitems.getText();
+            quantity=txtnoofitems.getText();
         }
     private void autoId(){
             try{

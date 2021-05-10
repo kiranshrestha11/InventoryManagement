@@ -38,7 +38,7 @@ public class Sales extends javax.swing.JInternalFrame {
     ArrayList<String> discount = new ArrayList<>();
     ArrayList<String> amountAfterDiscount = new ArrayList<>();
     
-    String iid,iname,iquantity,iunitprice,iamount,idiscount,billno;
+    String iid,iname,iquantity,iunitprice,iamount,idiscount,billno,oldqty;
     
     public Sales() {
         initComponents();
@@ -108,8 +108,6 @@ public class Sales extends javax.swing.JInternalFrame {
         txtbalance = new javax.swing.JTextField();
         clearButton = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        printButton = new javax.swing.JPanel();
-        jLabel18 = new javax.swing.JLabel();
         salesButton = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         addButton = new javax.swing.JPanel();
@@ -267,34 +265,6 @@ public class Sales extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        printButton.setBackground(new java.awt.Color(136, 176, 207));
-        printButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                printButtonMouseClicked(evt);
-            }
-        });
-
-        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel18.setText("Print");
-
-        javax.swing.GroupLayout printButtonLayout = new javax.swing.GroupLayout(printButton);
-        printButton.setLayout(printButtonLayout);
-        printButtonLayout.setHorizontalGroup(
-            printButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(printButtonLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel18)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-        printButtonLayout.setVerticalGroup(
-            printButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, printButtonLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel18)
-                .addContainerGap())
-        );
-
         salesButton.setBackground(new java.awt.Color(136, 176, 207));
         salesButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -371,22 +341,13 @@ public class Sales extends javax.swing.JInternalFrame {
                         .addGap(60, 60, 60)
                         .addComponent(txtunitprice))
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(salesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                        .addComponent(printButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(65, 65, 65)
                         .addComponent(txtdiscount))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(jLabel14)
                         .addGap(91, 91, 91)
-                        .addComponent(txtbalance))
+                        .addComponent(txtbalance, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel15)
@@ -402,7 +363,17 @@ public class Sales extends javax.swing.JInternalFrame {
                         .addGap(59, 59, 59)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtquantity)
-                            .addComponent(txtsubtotal))))
+                            .addComponent(txtsubtotal)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(salesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(120, 120, 120)
+                        .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88)))
                 .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
@@ -449,7 +420,6 @@ public class Sales extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(salesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(printButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(37, 37, 37))
         );
@@ -533,27 +503,28 @@ public class Sales extends javax.swing.JInternalFrame {
     
     private void salesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_salesButtonMouseClicked
         addtoTotalSalesDB();
-        JOptionPane.showMessageDialog(rootPane, "Sales Completed");
+        totalAmount=0.0;
         System.out.println("Sales completed and fetched to database");
-        //autoId();
-    }//GEN-LAST:event_salesButtonMouseClicked
-
-    private void printButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_printButtonMouseClicked
-        //addtoTotalSalesDB();
-        getData();
+        int input=JOptionPane.showConfirmDialog( null,"Sales Completed."+"Do you want to print the bill?","Select an option",JOptionPane.YES_NO_OPTION);
+        if(input==0){
+            getData();
         getBillData();
         billHeight=Double.valueOf(itemName.size());
         PrinterJob pj=PrinterJob.getPrinterJob();
         pj.setPrintable(new BillPrintable(),getPageFormat(pj));
         try{
             pj.print();
+            autoId();
         }
         catch(PrinterException ex){
         }
         clearData();
-        //JOptionPane.showMessageDialog(rootPane, "Sales Completed");
-        System.out.println("Printing...");
-    }//GEN-LAST:event_printButtonMouseClicked
+        }
+        else{
+            clearData();
+            autoId();
+        }
+    }//GEN-LAST:event_salesButtonMouseClicked
     
     private void getData(){
         try{
@@ -606,18 +577,37 @@ public class Sales extends javax.swing.JInternalFrame {
         clearData();
     }//GEN-LAST:event_clearButtonMouseClicked
     
+    private void updateQuantity(String qty){
+        try{
+            String sql="SELECT `quantity` FROM `stock` WHERE item_id='"+txtiid.getText()+"'";
+        pst = con.prepareStatement(sql);
+        rs = pst.executeQuery();
+        while(rs.next()){
+            oldqty=rs.getString("quantity");
+        }
+        int newqty=Integer.parseInt(oldqty)-Integer.parseInt(qty);
+        System.out.println(newqty);
+        String sqli="UPDATE `stock` SET `quantity`='"+newqty+"' where item_id='"+txtiid.getText()+"'";
+        pst=con.prepareStatement(sqli);
+        pst.executeUpdate();
+        }catch(SQLException se){
+            se.getMessage();
+        }
+    }
+    
+    
     private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseClicked
         iid=txtiid.getText();
         iname=txtiname.getText();
         iunitprice=txtunitprice.getText();
-        iquantity=txtquantity.getText();
-        iamount=txtsubtotal.getText();
+        iquantity=txtquantity.getText();iamount=txtsubtotal.getText();
         idiscount=txtdiscount.getText();
         billno=lblbill.getText();
         //amount after discount
         amtAfterDiscount = Double.parseDouble(txtsubtotal.getText()) - Double.parseDouble(txtdiscount.getText());
         totalAmount = totalAmount + amtAfterDiscount;
         txttotalAmount.setText(totalAmount + "");
+        updateQuantity(iquantity);
         try{
            String qr="INSERT INTO `per_item_sales`(`bill_no`, `item_id`, `item_name`, `unit_price`, `quantity`, `amount`, `discount`, `total_amt`) VALUES ('"+billno+"','"+iid+"','"+iname+"','"+iunitprice+"','"+iquantity+"','"+iamount+"','"+idiscount+"','"+amtAfterDiscount+"')";
            pst=con.prepareStatement(qr);
@@ -740,7 +730,6 @@ public class Sales extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -756,7 +745,6 @@ public class Sales extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblbill;
     private javax.swing.JLabel lblimage;
-    private javax.swing.JPanel printButton;
     private javax.swing.JPanel salesButton;
     private javax.swing.JTextField txtbalance;
     private javax.swing.JTextArea txtbill;
