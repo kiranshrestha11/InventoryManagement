@@ -15,10 +15,6 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author hjp
- */
 public class AddItems extends javax.swing.JInternalFrame {
 
     /**
@@ -32,24 +28,22 @@ public class AddItems extends javax.swing.JInternalFrame {
     
     private ImageIcon format=null;
     String fname=null;
-    int s=0;
+    int lblimageClicked=0;
     byte[] pimage=null;
-    
-    
     
     public AddItems() {
         initComponents();
         con=DBConnect.connect();
         autoId();
-        tableLord();
+        tableLoad();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         
         BasicInternalFrameUI bi= (BasicInternalFrameUI)this.getUI();
         bi.setNorthPane(null);
     }
-    //Scaling image in Additems
+    //Scaling image in Additems in lblimage
     public ImageIcon resizeImage(String imagePath,byte[] pic){
-        ImageIcon myImage=null;
+        ImageIcon myImage;
         if(imagePath!=null){
             myImage=new ImageIcon(imagePath);
         }else{
@@ -159,12 +153,6 @@ public class AddItems extends javax.swing.JInternalFrame {
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("Quantity");
-
-        txtname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtnameActionPerformed(evt);
-            }
-        });
 
         cmbcategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Plywood", "CementBoard", "GypsumBoard", "Gypsum TileBoard", "Doors", "DoorFrame", "WindowFrame", "Fevicol", "Door Handle", "Door Spring", "L-Drop", "Hinges", "Listi", "channel", "Wood screw", "Gypsum Screw", "Metal Screw", " " }));
 
@@ -441,13 +429,10 @@ public class AddItems extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtnameActionPerformed
-
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
         getData();
-        try{
+        try
+        {
            String q="INSERT INTO `stock`(`item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` ) VALUES (?,?,?,?,?,?,?,?,?)";
            pst=con.prepareStatement(q);
            pst.setString(1,iid);
@@ -463,16 +448,19 @@ public class AddItems extends javax.swing.JInternalFrame {
            System.out.println("Data inserted successfully");
            
            clearData();
-           tableLord();
-        }catch(Exception e){
+           tableLoad();
+        }
+        catch(SQLException e){
            System.out.println(e.getMessage()); 
         }
+        pimage=null;
     }//GEN-LAST:event_jPanel5MouseClicked
-
-    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
-        getData();
-        try{
-            String squpdate="UPDATE `stock` SET `item_name`=?, `category`=?, `purchase_from`=?, `buy_price`=?, `sale_price`=?, `quantity`=?, `image`=? WHERE item_id='"+txtid.getText()+"'";
+    
+    private void updateStockQuery()
+    {
+        try
+        {
+           String squpdate="UPDATE `stock` SET `item_name`=?, `category`=?, `purchase_from`=?, `buy_price`=?, `sale_price`=?, `quantity`=?, `image`=? WHERE item_id='"+txtid.getText()+"'";
            pst=con.prepareStatement(squpdate);
            pst.setString(1,iname);
            pst.setString(2,category);
@@ -484,12 +472,43 @@ public class AddItems extends javax.swing.JInternalFrame {
            pst.executeUpdate();
            System.out.println("Data updated successfully");
         }
-        catch(Exception e){
+        catch(SQLException ex)
+        {
             System.out.println("Unable to update data");
+            System.out.println(ex.getMessage());
         }
+        pimage=null;
         clearData();
-        tableLord();
+        tableLoad();
+    }
+    
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        getData();
+       if(lblimageClicked==0)
+        {
+        try
+        {
+            String sq="SELECT `image` FROM `stock` WHERE item_id='"+iid+"'";
+            pst=con.prepareStatement(sq);
+            rs=pst.executeQuery();
+            while(rs.next())
+            {
+               pimage= rs.getBytes("image"); 
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        updateStockQuery();
+        }
+       else
+        {
+        updateStockQuery();
+        lblimageClicked=0;
+        }   
     }//GEN-LAST:event_jPanel6MouseClicked
+    
     private void clearData(){
         autoId();
         txtname.setText("");
@@ -502,17 +521,8 @@ public class AddItems extends javax.swing.JInternalFrame {
         lblimage.setText("Click to upload image");
     }
     
-    
-    
-    
-    private void lblimageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblimageMouseClicked
-        lblimage.setText("");
-        JFileChooser fchooser=new JFileChooser();
-        fchooser.showOpenDialog(null);
-        File file=fchooser.getSelectedFile();
-        if(file!=null){
-           fname=file.getAbsolutePath();
-        ImageIcon micon=new ImageIcon(fname);
+    private void getImagePath(String fname){
+            ImageIcon micon=new ImageIcon(fname);
         try{
             File image=new File(fname);
             FileInputStream fis=new FileInputStream(image);
@@ -524,31 +534,27 @@ public class AddItems extends javax.swing.JInternalFrame {
             }
             pimage=baos.toByteArray();
             lblimage.setIcon(resizeImage(fname,buf));
-            image.delete();
         }catch(IOException e){
-            
-        }  
+            System.out.println(e.getMessage());
+        } 
+    }
+    
+    private void lblimageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblimageMouseClicked
+        lblimageClicked=1;
+        lblimage.setText("");
+        JFileChooser fchooser=new JFileChooser();
+        fchooser.showOpenDialog(null);
+        File file=fchooser.getSelectedFile();
+        if(file!=null){
+           fname=file.getAbsolutePath();
+           getImagePath(fname);
+           System.out.println("Selected choosed image");
         }
         else{
             fname="src/image/noimageavailable.png";
-            ImageIcon micon=new ImageIcon(fname);
-            try{
-            File image=new File(fname);
-            FileInputStream fis=new FileInputStream(image);
-            ByteArrayOutputStream baos=new ByteArrayOutputStream();
-            byte[] buf=new byte[1024];
-            for(int readnum; (readnum=fis.read(buf))!=-1;)
-            {
-                baos.write(buf,0,readnum);
-            }
-            pimage=baos.toByteArray();
-            lblimage.setIcon(resizeImage(fname,buf));
-        }catch(IOException e){
-            System.out.println("Image not found");
-        } 
+            getImagePath(fname);
+            System.out.println("No image Selected");
         }
-             
-    
     }//GEN-LAST:event_lblimageMouseClicked
 
     private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
@@ -560,14 +566,14 @@ public class AddItems extends javax.swing.JInternalFrame {
           String sql="DELETE FROM `stock` WHERE item_id='"+txtid.getText()+"'";
           pst=con.prepareStatement(sql);
           pst.execute();
-          tableLord();
-      }catch(Exception e){
-          
+          tableLoad();
+          System.out.println("Deleted...");
+      }catch(SQLException e){
+          System.out.println(e.getMessage());
       }
     }//GEN-LAST:event_jPanel9MouseClicked
 
     private void tbladditemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbladditemMouseClicked
-        
         String id;
         DefaultTableModel tmodel=(DefaultTableModel)tbladditem.getModel();
         int selectrowindex=tbladditem.getSelectedRow();
@@ -592,58 +598,64 @@ public class AddItems extends javax.swing.JInternalFrame {
                 ImageIcon image=new ImageIcon(img2);
                 lblimage.setIcon(image);
                 }
-        }catch(Exception e){
+        }catch(SQLException e){
             JOptionPane.showMessageDialog(rootPane, e);
-        }
-        
+        } 
     }//GEN-LAST:event_tbladditemMouseClicked
-    private void tableLord(){
+    
+    private void tableLoad(){
         try{
             String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` FROM `stock";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tbladditem.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         }
-        catch(Exception e){
-            
+        catch(SQLException e){
+            System.out.println(e.getMessage());
         }
     }    
     
+    private void getData()
+    {   
+        iid=txtid.getText();
+        iname=txtname.getText();
+        category=cmbcategory.getSelectedItem().toString();
+        purchasefrom=txtpurchasefrom.getText();
+        buyprice=txtbprice.getText();
+        sellprice=txtsprice.getText();
+        quantity=txtnoofitems.getText();
+    }
     
-    private void getData(){
-            iid=txtid.getText();
-            iname=txtname.getText();
-            category=cmbcategory.getSelectedItem().toString();
-            purchasefrom=txtpurchasefrom.getText();
-            buyprice=txtbprice.getText();
-            sellprice=txtsprice.getText();
-            quantity=txtnoofitems.getText();
-        }
-    private void autoId(){
-            try{
-                String sql="SELECT `item_id` FROM `stock` ORDER BY item_id DESC LIMIT 1";
-                pst=con.prepareStatement(sql);
-                rs=pst.executeQuery();
-                if(rs.next()){
-                    String rnno=rs.getString("item_id");
-                    int co=rnno.length();
-                    String txt=rnno.substring(0,3);
-                    String num=rnno.substring(3,co);
-                    int n=Integer.parseInt(num);
-                    n++;
-                    String snum=Integer.toString(n);
-                    String ftxt=txt+snum;
-                    txtid.setText(ftxt); 
-                }
-                else{
-                    txtid.setText("IID1000");
-                }
-               
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(rootPane, e);
-                System.out.println(e.getMessage());
+    private void autoId()
+    {
+        try
+        {
+            String sql="SELECT `item_id` FROM `stock` ORDER BY item_id DESC LIMIT 1";
+            pst=con.prepareStatement(sql);
+            rs=pst.executeQuery();
+            if(rs.next())
+            {
+                String rnno=rs.getString("item_id");
+                int co=rnno.length();
+                String txt=rnno.substring(0,3);
+                String num=rnno.substring(3,co);
+                int n=Integer.parseInt(num);
+                n++;
+                String snum=Integer.toString(n);
+                String ftxt=txt+snum;
+                txtid.setText(ftxt); 
             }
+            else
+            {
+                txtid.setText("IID1000");
+            }  
         }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(rootPane, e);
+            System.out.println(e.getMessage());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cmbcategory;
