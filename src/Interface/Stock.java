@@ -9,15 +9,11 @@ import java.awt.Image;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-
-/**
- *
- * @author hjp
- */
 
 public class Stock extends javax.swing.JInternalFrame {
 
@@ -36,21 +32,21 @@ public class Stock extends javax.swing.JInternalFrame {
     public Stock() {
         initComponents();
         con=DBConnect.connect();
-        tableLord();
+        tableLoad();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         
         BasicInternalFrameUI bi= (BasicInternalFrameUI)this.getUI();
         bi.setNorthPane(null);
     }
-    private void tableLord(){ 
-        try{
+    private void tableLoad(){ 
+        try
+        {
             String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock`";
-        pst=con.prepareStatement(sql);
-        rs=pst.executeQuery();
-        tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+            pst=con.prepareStatement(sql);
+            rs=pst.executeQuery();
+            tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         }
-        catch(Exception e){
-            
+        catch(SQLException e){
         }
     }   
 
@@ -138,18 +134,6 @@ public class Stock extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Price");
 
-        txtname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtnameActionPerformed(evt);
-            }
-        });
-
-        txtcategory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtcategoryActionPerformed(evt);
-            }
-        });
-
         jPanel7.setBackground(new java.awt.Color(136, 176, 207));
         jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -194,7 +178,6 @@ public class Stock extends javax.swing.JInternalFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/search.png"))); // NOI18N
         jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel6.setPreferredSize(new java.awt.Dimension(35, 35));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -219,7 +202,7 @@ public class Stock extends javax.swing.JInternalFrame {
                             .addComponent(txtcategory)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 62, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,7 +238,7 @@ public class Stock extends javax.swing.JInternalFrame {
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
                         .addComponent(txtsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel6))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -326,14 +309,6 @@ public class Stock extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtnameActionPerformed
-
-    private void txtcategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcategoryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtcategoryActionPerformed
-
     private void tblstockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblstockMouseClicked
         String id;
         DefaultTableModel tmodel=(DefaultTableModel)tblstock.getModel();
@@ -357,25 +332,26 @@ public class Stock extends javax.swing.JInternalFrame {
                 ImageIcon image=new ImageIcon(img2);
                 lblimage.setIcon(image);
             }
-        }catch(Exception e){
+        }catch(SQLException e){
             JOptionPane.showMessageDialog(rootPane, e);
         }
     }//GEN-LAST:event_tblstockMouseClicked
 
     private void txtsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsearchKeyReleased
-        if(txtsearch.getText().length()>0){ 
-        try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock` WHERE item_name LIKE '%"+txtsearch.getText()+"%'";
-        pst=con.prepareStatement(sql);
-        rs=pst.executeQuery();
-        tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+        if(txtsearch.getText().length()>0)
+        { 
+            try{
+                String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock` WHERE item_name LIKE '%"+txtsearch.getText()+"%'";
+                pst=con.prepareStatement(sql);
+                rs=pst.executeQuery();
+                tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+            }
+            catch(SQLException e){
+            }
         }
-        catch(Exception e){
-            
-        }
-        }
-        else{
-            tableLord();
+        else
+        {
+            tableLoad();
         }
     }//GEN-LAST:event_txtsearchKeyReleased
 
@@ -384,7 +360,6 @@ public class Stock extends javax.swing.JInternalFrame {
         txtname.setText("");
         txtcategory.setText("");
         txtpurchasefrom.setText("");
-        txtsearch.setText("");
         txtprice.setText("");
         lblimage.setIcon(null);
     }//GEN-LAST:event_jPanel7MouseClicked
