@@ -161,7 +161,7 @@ public class Stock extends javax.swing.JInternalFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        txtsearch.setText("Search item");
+        txtsearch.setText("Search by ItemName");
         txtsearch.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtsearchMouseClicked(evt);

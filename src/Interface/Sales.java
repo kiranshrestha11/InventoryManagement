@@ -53,7 +53,7 @@ public class Sales extends javax.swing.JInternalFrame {
     private void tableLoad(){ 
         try
         {
-            String sql="SELECT `item_id`, `item_name`, `category` FROM `stock`";
+            String sql="SELECT `item_id`, `item_name` FROM `stock`";
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
             tblitemid.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));

@@ -308,7 +308,7 @@
             </Container>
             <Component class="javax.swing.JTextField" name="txtsearch">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Search item"/>
+                <Property name="text" type="java.lang.String" value="Search by ItemName"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txtsearchMouseClicked"/>
