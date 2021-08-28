@@ -569,6 +569,7 @@ public class Sales extends javax.swing.JInternalFrame {
         } 
         catch (SQLException e) 
         {
+           System.out.println("couldnot insert data in customer table");
            System.out.println(e.getMessage());
         }
     }
