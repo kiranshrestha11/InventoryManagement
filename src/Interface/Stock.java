@@ -41,7 +41,9 @@ public class Stock extends javax.swing.JInternalFrame {
     private void tableLoad(){ 
         try
         {
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock`";
+            String sql="SELECT `item_id` as 'ItemID', `item_name` as 'Item Name', `category` as 'Category',"
+                    + " `purchase_from` as 'Purchased From', `buy_price` as 'Cost Price', `sale_price` as 'Sales Price',"
+                    + " `quantity` as 'Quantity' FROM `stock`";
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
             tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -132,7 +134,7 @@ public class Stock extends javax.swing.JInternalFrame {
         jLabel4.setText("Purchased From");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setText("Price");
+        jLabel5.setText("Sales Price");
 
         jPanel7.setBackground(new java.awt.Color(136, 176, 207));
         jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {

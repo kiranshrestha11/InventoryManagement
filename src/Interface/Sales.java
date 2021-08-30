@@ -53,7 +53,7 @@ public class Sales extends javax.swing.JInternalFrame {
     private void tableLoad(){ 
         try
         {
-            String sql="SELECT `item_id`, `item_name` FROM `stock`";
+            String sql="SELECT `item_id` as 'ItemID', `item_name` as 'Item Name' FROM `stock`";
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
             tblitemid.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -533,7 +533,7 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void txtquantityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtquantityKeyReleased
         double price = Double.parseDouble(txtunitprice.getText());
-        double unit = Double.parseDouble(txtquantity.getText());
+        int unit = Integer.parseInt(txtquantity.getText());
         double tprice = price * unit;
         txtsubtotal.setText(tprice + "");
     }//GEN-LAST:event_txtquantityKeyReleased
@@ -578,7 +578,6 @@ public class Sales extends javax.swing.JInternalFrame {
         addtoCustomerDetailDB();
         addtoTotalSalesDB();
         totalAmount=0.0;
-        System.out.println("Sales completed and fetched to database");
         int input=JOptionPane.showConfirmDialog( null,"Sales Completed."+"Do you want to print the bill?","Select an option",JOptionPane.YES_NO_OPTION);
         if(input==0){
             getData();
@@ -645,6 +644,9 @@ public class Sales extends javax.swing.JInternalFrame {
         txttotalAmount.setText("");
         txtcash.setText("");
         txtbalance.setText("");
+        txtCustomerName.setText("");
+        txtCustomerAddress.setText("");
+        txtCustomerContact.setText("");
     }
     private void clearButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearButtonMouseClicked
         clear();

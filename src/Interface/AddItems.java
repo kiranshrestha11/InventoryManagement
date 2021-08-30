@@ -146,10 +146,10 @@ public class AddItems extends javax.swing.JInternalFrame {
         jLabel4.setText("Purchased From");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setText("Buying Price");
+        jLabel5.setText("Cost Price");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setText("Selling Price");
+        jLabel6.setText("Sales Price");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("Quantity");
@@ -605,7 +605,9 @@ public class AddItems extends javax.swing.JInternalFrame {
     
     private void tableLoad(){
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` FROM `stock";
+            String sql="SELECT `item_id` as 'Item ID', `item_name` as 'Item Name', `category` as 'Category',"
+                    + " `purchase_from` as 'Purchased From', `buy_price` as 'Cost Price', `sale_price` as 'Sales Price',"
+                    + " `quantity` as 'Quantity' FROM `stock";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tbladditem.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));

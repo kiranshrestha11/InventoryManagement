@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -40,25 +41,57 @@ public class Report extends javax.swing.JInternalFrame {
         BasicInternalFrameUI bi= (BasicInternalFrameUI)this.getUI();
         bi.setNorthPane(null);
     }
+    private void salestheader()
+    {
+        TableColumn cl1=tblsale.getColumnModel().getColumn(0);
+        cl1.setPreferredWidth(50);
+        TableColumn cl2=tblsale.getColumnModel().getColumn(1);
+        cl2.setPreferredWidth(145);
+        TableColumn cl4=tblsale.getColumnModel().getColumn(3);
+        cl4.setPreferredWidth(50);
+    }
     
-    private void salesLoad(){
+    private void salesLoad()
+    {
         try{
-            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_id, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM per_item_sales JOIN total_sales ON per_item_sales.bill_no=total_sales.bill_no";
+            String sql="SELECT per_item_sales.bill_no as 'Bill No.', per_item_sales.item_name as 'Item Name', per_item_sales.unit_price as 'Unit Price',"
+                    + " per_item_sales.quantity as 'Quantity', per_item_sales.amount as 'Amount', per_item_sales.discount as 'Discount', per_item_sales.total_amt as 'SubTotal',"
+                    + " total_sales.total_amt as 'Total Amount', total_sales.cash as 'Payment', total_sales.balance as 'Balance/Due', total_sales.date as 'Date' "
+                    + " FROM per_item_sales JOIN total_sales ON per_item_sales.bill_no=total_sales.bill_no";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+        salestheader();
         }
         catch(Exception e){
             
         }
     }
     
+    private void stocktheader()
+    {
+        TableColumn cl1=tblstock.getColumnModel().getColumn(0);
+        cl1.setPreferredWidth(55);
+        TableColumn cl2=tblstock.getColumnModel().getColumn(1);
+        cl2.setPreferredWidth(70);
+        TableColumn cl3=tblstock.getColumnModel().getColumn(2);
+        cl3.setPreferredWidth(70);
+        TableColumn cl4=tblstock.getColumnModel().getColumn(3);
+        cl4.setPreferredWidth(150);
+        TableColumn cl5=tblstock.getColumnModel().getColumn(4);
+        cl5.setPreferredWidth(50);
+        TableColumn cl6=tblstock.getColumnModel().getColumn(5);
+        cl6.setPreferredWidth(50);
+    }
+    
     private void stockLoad(){
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity` FROM `stock`";
+            String sql="SELECT `item_id` as 'ItemID', `item_name` as 'Item Name', `category` as 'Category', `purchase_from` as 'Purchased From',"
+                    + " `buy_price` as 'Cost Price', `quantity` as 'Quantity' FROM `stock`";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+        stocktheader();
         }
         catch(Exception e){
             
@@ -202,6 +235,7 @@ public class Report extends javax.swing.JInternalFrame {
 
             }
         ));
+        tblsale.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane2.setViewportView(tblsale);
 
         jLabel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -434,19 +468,22 @@ public class Report extends javax.swing.JInternalFrame {
         String saleFDate=((JTextField)fdate.getDateEditor().getUiComponent()).getText();
         String saleTDate=((JTextField)tdate.getDateEditor().getUiComponent()).getText();
         if(saleFDate.length()>0 && saleTDate.isEmpty()){
-            try{
-            //String sql="SELECT `bill_no`, `total_amt`, `cash`, `balance`, `date` FROM `total_sales` where date='"+saleFDate+"'";
-        String sql="SELECT per_item_sales.bill_no, per_item_sales.item_id, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM total_sales JOIN per_item_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE total_sales.date='"+saleFDate+"'";
-        pst=con.prepareStatement(sql);
-        rs=pst.executeQuery();
-        tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+        try
+        {
+            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_name, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM total_sales JOIN per_item_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE total_sales.date='"+saleFDate+"'";
+            pst=con.prepareStatement(sql);
+            rs=pst.executeQuery();
+            tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         }
         catch(Exception e){
             
         }
         }else if(saleFDate.length()>0 && saleTDate.length()>0){
             try{
-            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_id, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM per_item_sales JOIN total_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE date between '"+saleFDate+"' and '"+saleTDate+"'";
+            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_name, per_item_sales.unit_price, "
+                    + "per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, "
+                    + "total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date "
+                    + "FROM per_item_sales JOIN total_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE date between '"+saleFDate+"' and '"+saleTDate+"'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
