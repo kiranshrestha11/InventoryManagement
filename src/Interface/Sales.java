@@ -580,7 +580,7 @@ public class Sales extends javax.swing.JInternalFrame {
         totalAmount=0.0;
         int input=JOptionPane.showConfirmDialog( null,"Sales Completed."+"Do you want to print the bill?","Select an option",JOptionPane.YES_NO_OPTION);
         if(input==0){
-            getData();
+        getData();
         getBillData();
         billHeight=Double.valueOf(itemName.size());
         PrinterJob pj=PrinterJob.getPrinterJob();
