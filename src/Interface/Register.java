@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Interface;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -136,18 +132,6 @@ public class Register extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Confirm Password");
 
-        txtpw.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtpwActionPerformed(evt);
-            }
-        });
-
-        txtcpw.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtcpwActionPerformed(evt);
-            }
-        });
-
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("ID");
 
@@ -219,8 +203,8 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
-        int x=evt.getX();
-        int y=evt.getY();
+        x=evt.getX();
+        y=evt.getY();
     }//GEN-LAST:event_jPanel1MousePressed
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
@@ -242,18 +226,10 @@ public class Register extends javax.swing.JFrame {
            pst.setString(4,repass);
            pst.execute();
         }
-        catch(Exception e){
+        catch(SQLException e){
             
         }
     }//GEN-LAST:event_jPanel3MouseClicked
-
-    private void txtpwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpwActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtpwActionPerformed
-
-    private void txtcpwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcpwActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtcpwActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,10 +260,8 @@ public class Register extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Register().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Register().setVisible(true);
         });
     }
 

@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -22,9 +21,6 @@ public class SalesReturn extends javax.swing.JInternalFrame {
     PreparedStatement pst = null;
     ResultSet rs = null;
     Connection con;
-    ArrayList<String> itemName = new ArrayList<>();
-    ArrayList<String> subtotal = new ArrayList<>();
-    ArrayList<String> amountAfterDiscount = new ArrayList<>();
     
     Double totalAmt=0.0,subTotal;
     
@@ -414,29 +410,10 @@ public class SalesReturn extends javax.swing.JInternalFrame {
            String qr="INSERT INTO `sales_return`(`bill_no`, `item_id`, `quantity`, `sub_total`, `total_amt`) VALUES ('"+billno+"','"+itemId+"','"+nQuantity+"','"+subTotal+"','"+totalAmt+"')";
            pst=con.prepareStatement(qr);
            pst.execute();
-           System.out.println("Item added to the list");
         }catch(SQLException e){
             JOptionPane.showMessageDialog(rootPane,e);
         } 
     }//GEN-LAST:event_returnButtonMouseClicked
-    
-    private void getData(){
-        try{
-            String sql="SELECT `bill_no` , `item_id`, `item_name`, `unit_price`, `quantity`, `amount`, `discount`, `total_amt` FROM `per_item_sales` WHERE bill_no='"+txtBillno.getText()+"'";
-        pst=con.prepareStatement(sql);
-        rs=pst.executeQuery();
-        while(rs.next()){
-            //itemId.add(rs.getString("item_id"));
-            itemName.add(rs.getString("item_name"));
-            //unitprice.add(rs.getString("unit_price"));
-            //quantity.add(rs.getString("quantity"));
-            subtotal.add(rs.getString("amount"));
-            //discount.add(rs.getString("discount"));
-            amountAfterDiscount.add(rs.getString("total_amt"));
-            }
-        }catch(SQLException ex){
-        }
-    }
     
     private void clear() {
         txtItemId.setText("");
@@ -465,7 +442,6 @@ public class SalesReturn extends javax.swing.JInternalFrame {
         }
         int newqty=Integer.parseInt(oldqty)+Integer.parseInt(qty);
         String remarks=txtRemarks.getText();
-        System.out.println(newqty);
         String sqli="UPDATE `stock` SET `quantity`='"+newqty+"', `remarks`='"+remarks+"' where item_id='"+txtItemId.getText()+"'";
         pst=con.prepareStatement(sqli);
         pst.executeUpdate();

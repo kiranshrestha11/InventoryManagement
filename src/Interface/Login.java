@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Interface;
 
-/**
- *
- * @author hjp
- */
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
@@ -126,12 +119,6 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Password");
 
-        txtpword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtpwordActionPerformed(evt);
-            }
-        });
-
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Forget Password?");
 
@@ -189,7 +176,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        System.exit(0);        // TODO add your handling code here:
+        System.exit(0);      
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
@@ -199,8 +186,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
-        int x=evt.getX();
-        int y=evt.getY();
+        x=evt.getX();
+        y=evt.getY();
     }//GEN-LAST:event_jPanel1MousePressed
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
@@ -217,17 +204,13 @@ public class Login extends javax.swing.JFrame {
                     this.dispose();
                 }
                 else{
-                    JOptionPane.showMessageDialog(rootPane,"Password incorrect");
+                    JOptionPane.showMessageDialog(rootPane,"Incorrect Password");
                 }
         }
-        }catch(Exception e){
+        }catch(HeadlessException | SQLException e){
            System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_jPanel3MouseClicked
-
-    private void txtpwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpwordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtpwordActionPerformed
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         SignUp sg=new SignUp();
@@ -263,10 +246,8 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Login().setVisible(true);
         });
     }
 

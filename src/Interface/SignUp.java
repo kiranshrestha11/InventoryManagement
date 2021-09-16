@@ -8,6 +8,7 @@ package Interface;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -136,18 +137,6 @@ public class SignUp extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Confirm Password");
 
-        txtpw.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtpwActionPerformed(evt);
-            }
-        });
-
-        txtcpw.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtcpwActionPerformed(evt);
-            }
-        });
-
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("ID");
 
@@ -168,9 +157,12 @@ public class SignUp extends javax.swing.JFrame {
                         .addComponent(txtemail)
                         .addComponent(txtpw)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtcpw, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(txtuname)))
                 .addContainerGap(21, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addComponent(txtcpw, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,8 +211,8 @@ public class SignUp extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
-        int x=evt.getX();
-        int y=evt.getY();
+         x=evt.getX();
+         y=evt.getY();
     }//GEN-LAST:event_jPanel1MousePressed
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
@@ -244,19 +236,11 @@ public class SignUp extends javax.swing.JFrame {
            lo.setVisible(true);
            this.dispose();
            
-        }catch(Exception e){
+        }catch(SQLException e){
             
         }
         
     }//GEN-LAST:event_jPanel3MouseClicked
-
-    private void txtpwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpwActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtpwActionPerformed
-
-    private void txtcpwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcpwActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtcpwActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,14 +269,10 @@ public class SignUp extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
+    
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SignUp().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new SignUp().setVisible(true);
         });
     }
 

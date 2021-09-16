@@ -9,6 +9,7 @@ import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +64,7 @@ public class Report extends javax.swing.JInternalFrame {
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         salestheader();
         }
-        catch(Exception e){
+        catch(SQLException e){
             
         }
     }
@@ -93,7 +94,7 @@ public class Report extends javax.swing.JInternalFrame {
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         stocktheader();
         }
-        catch(Exception e){
+        catch(SQLException e){
             
         }
     }
@@ -475,7 +476,7 @@ public class Report extends javax.swing.JInternalFrame {
             rs=pst.executeQuery();
             tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         }
-        catch(Exception e){
+        catch(SQLException e){
             
         }
         }else if(saleFDate.length()>0 && saleTDate.length()>0){
@@ -488,7 +489,7 @@ public class Report extends javax.swing.JInternalFrame {
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         }
-        catch(Exception e){
+        catch(SQLException e){
             
         }
         }
@@ -506,7 +507,7 @@ public class Report extends javax.swing.JInternalFrame {
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
         }
-        catch(Exception e){
+        catch(SQLException e){
             
         }
         }else{

@@ -555,7 +555,8 @@ public class Sales extends javax.swing.JInternalFrame {
         try {
            String qr="INSERT INTO `total_sales`(`bill_no`, `total_amt`, `cash`, `balance`, `date`) VALUES ('"+lblbill.getText()+"','"+txttotalAmount.getText()+"','"+txtcash.getText()+"','"+txtbalance.getText()+"','"+date+"')";
            pst=con.prepareStatement(qr);
-           pst.execute();} catch (SQLException e) {
+           pst.execute();} 
+        catch (SQLException e) {
            System.out.println(e.getMessage());
         }
     }
@@ -569,7 +570,6 @@ public class Sales extends javax.swing.JInternalFrame {
         } 
         catch (SQLException e) 
         {
-           System.out.println("couldnot insert data in customer table");
            System.out.println(e.getMessage());
         }
     }
@@ -662,7 +662,6 @@ public class Sales extends javax.swing.JInternalFrame {
             oldqty=rs.getString("quantity");
         }
         int newqty=Integer.parseInt(oldqty)-Integer.parseInt(qty);
-        System.out.println(newqty);
         String sqli="UPDATE `stock` SET `quantity`='"+newqty+"' where item_id='"+txtiid.getText()+"'";
         pst=con.prepareStatement(sqli);
         pst.executeUpdate();
@@ -688,7 +687,6 @@ public class Sales extends javax.swing.JInternalFrame {
            String qr="INSERT INTO `per_item_sales`(`bill_no`, `item_id`, `item_name`, `unit_price`, `quantity`, `amount`, `discount`, `total_amt`) VALUES ('"+billno+"','"+iid+"','"+iname+"','"+iunitprice+"','"+iquantity+"','"+iamount+"','"+idiscount+"','"+amtAfterDiscount+"')";
            pst=con.prepareStatement(qr);
            pst.execute();
-           System.out.println("Item added to the list");
         }catch(SQLException e){
             JOptionPane.showMessageDialog(rootPane,e);
         }
