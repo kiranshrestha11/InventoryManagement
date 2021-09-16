@@ -417,8 +417,7 @@ public class SalesReturn extends javax.swing.JInternalFrame {
            System.out.println("Item added to the list");
         }catch(SQLException e){
             JOptionPane.showMessageDialog(rootPane,e);
-        }
-        clear();   
+        } 
     }//GEN-LAST:event_returnButtonMouseClicked
     
     private void getData(){
@@ -448,6 +447,7 @@ public class SalesReturn extends javax.swing.JInternalFrame {
         txtBillno.setText("");
         txtItemId.setText("");
         txtQuantity.setText("");
+        txtRemarks.setText("");
     }
     private void doneBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneBtnMouseClicked
         jLabel4.setText("Sales Return amount is:"+Double.toString(totalAmt));
@@ -476,7 +476,7 @@ public class SalesReturn extends javax.swing.JInternalFrame {
     
     
     private void clearButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearButtonMouseClicked
-        clearData();
+        clear();
     }//GEN-LAST:event_clearButtonMouseClicked
 
     private void txtBillnoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBillnoKeyReleased
