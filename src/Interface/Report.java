@@ -471,23 +471,33 @@ public class Report extends javax.swing.JInternalFrame {
         if(saleFDate.length()>0 && saleTDate.isEmpty()){
         try
         {
-            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_name, per_item_sales.unit_price, per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date FROM total_sales JOIN per_item_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE total_sales.date='"+saleFDate+"'";
+            String sql="SELECT per_item_sales.bill_no as 'Bill No.', per_item_sales.item_name as 'Item Name',"
+                    + " per_item_sales.unit_price as 'Unit Price', per_item_sales.quantity as 'Quantity',"
+                    + " per_item_sales.amount as 'Amount', per_item_sales.discount as 'Discount',"
+                    + " per_item_sales.total_amt as 'Sub Total', total_sales.total_amt as 'Total Amount',"
+                    + " total_sales.cash as 'Payment', total_sales.balance as 'Balance', total_sales.date as "
+                    + " 'Date' FROM total_sales JOIN per_item_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE total_sales.date='"+saleFDate+"'";
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
             tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+            salestheader();
         }
         catch(SQLException e){
             
         }
         }else if(saleFDate.length()>0 && saleTDate.length()>0){
             try{
-            String sql="SELECT per_item_sales.bill_no, per_item_sales.item_name, per_item_sales.unit_price, "
-                    + "per_item_sales.quantity, per_item_sales.amount, per_item_sales.discount, per_item_sales.total_amt, "
-                    + "total_sales.total_amt, total_sales.cash, total_sales.balance, total_sales.date "
+            String sql="SELECT per_item_sales.bill_no as 'Bill No.', per_item_sales.item_name as 'Item Name',"
+                    + " per_item_sales.unit_price as 'Unit Price', "
+                    + "per_item_sales.quantity as 'Quantity', per_item_sales.amount as 'Amount', per_item_sales.discount as 'Discount',"
+                    + " per_item_sales.total_amt as 'Sub Total', "
+                    + "total_sales.total_amt as 'Total Amount', total_sales.cash as 'Payment', total_sales.balance as 'Balance',"
+                    + " total_sales.date as 'Date'"
                     + "FROM per_item_sales JOIN total_sales ON total_sales.bill_no=per_item_sales.bill_no WHERE date between '"+saleFDate+"' and '"+saleTDate+"'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblsale.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+        salestheader();
         }
         catch(SQLException e){
             
@@ -502,13 +512,15 @@ public class Report extends javax.swing.JInternalFrame {
         String category=txtcategory.getText();
         if(txtcategory.getText().length()>0){
         try{
-            String sql="SELECT `item_id`, `item_name`, `category`, `purchase_from`, `buy_price`, `sale_price`, `quantity`, `image`, `mark` FROM `stock` where category LIKE '%"+category+"%'";
+            String sql="SELECT `item_id` as 'ItemID', `item_name` as 'Item Name', `category` as 'Category', `purchase_from` as 'Purchased From',"
+                    + " `buy_price` as 'Cost Price', `quantity` as 'Quantity' FROM `stock` where category LIKE '%"+category+"%'";
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery();
         tblstock.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
+        stocktheader();
         }
         catch(SQLException e){
-            
+            System.out.println(e.getMessage());
         }
         }else{
             stockLoad();

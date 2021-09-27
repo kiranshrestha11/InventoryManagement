@@ -1,9 +1,12 @@
 package Interface;
 
+import static Interface.validate.isEmail;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,9 +21,14 @@ public class Register extends javax.swing.JFrame {
     PreparedStatement pst=null;
     ResultSet rs=null;
     Connection con;
+    String uid;
+    boolean status=true,w=true;
+    String unam,em;
     public Register() {
+        setUndecorated(true);
+        setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
         initComponents();
-        con=DBConnect.connect();
+        con=DBConnect.connect();   
     }
 
     /**
@@ -39,7 +47,6 @@ public class Register extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtid = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtemail = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -129,11 +136,62 @@ public class Register extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Password");
 
+        txtemail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtemailFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtemailFocusLost(evt);
+            }
+        });
+        txtemail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtemailMousePressed(evt);
+            }
+        });
+        txtemail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtemailKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtemailKeyReleased(evt);
+            }
+        });
+
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Confirm Password");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtpw.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtpwFocusLost(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(204, 255, 204));
         jLabel5.setText("ID");
+
+        txtuname.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtunameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtunameFocusLost(evt);
+            }
+        });
+        txtuname.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtunameMousePressed(evt);
+            }
+        });
+        txtuname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtunameKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtunameKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -141,47 +199,46 @@ public class Register extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel8)
-                        .addComponent(jLabel7)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel2)
-                        .addComponent(txtid)
-                        .addComponent(txtemail)
-                        .addComponent(txtpw)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtcpw, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtuname)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(txtemail)
+                    .addComponent(txtpw)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtcpw, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtuname))
                 .addContainerGap(24, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtuname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtpw, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtcpw, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 300, 430));
@@ -191,8 +248,7 @@ public class Register extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        Home home=new Home();
-        home.setVisible(true);
+        w=false;
         this.dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
@@ -206,30 +262,169 @@ public class Register extends javax.swing.JFrame {
         x=evt.getX();
         y=evt.getY();
     }//GEN-LAST:event_jPanel1MousePressed
-
+    
+    void getUid(String id){
+        uid=id;
+        jLabel5.setText(id);
+        try{
+            String sql="SELECT `user_name`, `email` FROM `register` WHERE user_id='"+id+"'"; 
+            pst=con.prepareStatement(sql);
+            rs=pst.executeQuery();
+            if(rs.next()){
+            unam=rs.getString("user_name");
+            em=rs.getString("email");
+            
+        }
+            txtuname.setForeground(new java.awt.Color(204,204,204));
+            txtuname.setText(unam);
+            txtemail.setForeground(new java.awt.Color(204,204,204));
+            txtemail.setText(em);
+        }
+        catch(SQLException e){
+            
+        }
+    }
+    
+    
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
-        Home ho=new Home();
-        ho.setVisible(true);
-        this.dispose();
-        
         String username=txtuname.getText();
         String email=txtemail.getText();
         String password=txtpw.getText();
         String repass=txtcpw.getText();
-        
-        try{
-            String squpdate="UPDATE `register` SET `user_name`=?, `email`=?, `password`=?, `re_password`=? WHERE id='"+txtid.getText()+"'";
+        String userid=jLabel5.getText();
+        if(username.isEmpty()||email.isEmpty()||password.isEmpty()||repass.isEmpty()){
+            JOptionPane.showMessageDialog(null,"Fields must not be empty.");
+        }else{
+            if(!txtcpw.getText().equals(txtpw.getText())){
+            JOptionPane.showMessageDialog(null,"Password entered do not match.","Failed",JOptionPane.WARNING_MESSAGE);
+        }
+            else{
+                try{
+            String squpdate="UPDATE `register` SET `user_name`=?, `email`=?, `password`=? WHERE user_id='"+userid+"'";
             pst=con.prepareStatement(squpdate);
            pst.setString(1,username);
            pst.setString(2,email);
            pst.setString(3,password);
-           pst.setString(4,repass);
            pst.execute();
         }
         catch(SQLException e){
             
         }
+                this.dispose();
+            }
+        }
+        
+        
     }//GEN-LAST:event_jPanel3MouseClicked
+
+    private void txtunameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtunameKeyReleased
+        status=false;
+        if(txtuname.getText().isEmpty()==true){
+            txtuname.setText(unam);
+            txtuname.setCaretPosition(0);
+            txtuname.setForeground(new java.awt.Color(204,204,204));
+        }
+    }//GEN-LAST:event_txtunameKeyReleased
+
+    private void txtunameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtunameFocusLost
+       String username,uname=txtuname.getText();
+        if(w==true){
+            try{
+              String sql="SELECT `user_name` FROM `register`"; 
+              pst=con.prepareStatement(sql);
+              rs=pst.executeQuery();
+              while(rs.next()){
+                  username=(rs.getString("user_name"));
+                boolean b=uname.equalsIgnoreCase(username);
+                  if(b==true){
+                      JOptionPane.showMessageDialog(null, "Username already exists.");
+                      break;
+                      }
+                  else{
+                      status=true;
+                    }
+              }
+              
+           }
+           catch(SQLException ex){
+               
+           }
+        }
+    }//GEN-LAST:event_txtunameFocusLost
+
+    private void txtemailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtemailFocusLost
+        if(status==true&&txtemail.getText().isEmpty()){
+            status=true;
+        }
+        else if(status==true){if(isEmail(txtemail.getText())==false){
+            status=false;
+           JOptionPane.showMessageDialog(null,"Please enter valid Email address","Failed",JOptionPane.WARNING_MESSAGE);
+           txtemail.setText("");
+           status=true;
+        }}
+        else{
+        status=true;
+        }
+    }//GEN-LAST:event_txtemailFocusLost
+
+    private void txtpwFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtpwFocusLost
+        if(status==true&&txtpw.getText().isEmpty()){
+            status=true;
+        }
+        else if(status==true){
+            if(txtpw.getText().length()<6){
+                status=false;
+            JOptionPane.showMessageDialog(null,"Enter at least 6 characters.");
+            txtpw.setText("");
+            status=true;
+        }
+        }
+        else{
+            status=true;
+        }
+    }//GEN-LAST:event_txtpwFocusLost
+
+    private void txtunameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtunameMousePressed
+        txtuname.setCaretPosition(0);
+    }//GEN-LAST:event_txtunameMousePressed
+
+    private void txtemailMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtemailMousePressed
+        txtemail.setCaretPosition(0);
+    }//GEN-LAST:event_txtemailMousePressed
+
+    private void txtunameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtunameFocusGained
+        txtuname.setCaretPosition(0);
+    }//GEN-LAST:event_txtunameFocusGained
+
+    private void txtunameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtunameKeyPressed
+        if(txtuname.getForeground()!=Color.BLACK){
+            if(txtuname.getText().equals(unam)){
+                txtuname.setText("");
+            }
+        }
+        txtuname.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtunameKeyPressed
+
+    private void txtemailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtemailFocusGained
+        txtemail.setCaretPosition(0);
+    }//GEN-LAST:event_txtemailFocusGained
+
+    private void txtemailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtemailKeyPressed
+        if(txtemail.getForeground()!=Color.BLACK){
+            if(txtemail.getText().equals(em)){
+                txtemail.setText("");
+            }
+        }
+        txtemail.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtemailKeyPressed
+
+    private void txtemailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtemailKeyReleased
+        if(txtemail.getText().isEmpty()==true){
+            txtemail.setText(em);
+            txtemail.setCaretPosition(0);
+            txtemail.setForeground(new java.awt.Color(204,204,204));
+        }
+    }//GEN-LAST:event_txtemailKeyReleased
 
     /**
      * @param args the command line arguments
@@ -278,7 +473,6 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField txtcpw;
     private javax.swing.JTextField txtemail;
-    private javax.swing.JTextField txtid;
     private javax.swing.JPasswordField txtpw;
     private javax.swing.JTextField txtuname;
     // End of variables declaration//GEN-END:variables

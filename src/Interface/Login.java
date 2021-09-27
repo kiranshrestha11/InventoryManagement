@@ -1,5 +1,6 @@
 package Interface;
 
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,9 +16,14 @@ public class Login extends javax.swing.JFrame {
     PreparedStatement pst=null;
     ResultSet rs=null;
     Connection con;
+    boolean a;
+    String uid;
     public Login() {
+        setUndecorated(true);
+        setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
         initComponents();
         con=DBConnect.connect();
+        
     }
 
     /**
@@ -120,7 +126,7 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setText("Password");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setText("Forget Password?");
+        jLabel5.setText("Forgot Password?");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("Sign Up");
@@ -147,7 +153,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtpword, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(txtuname, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,9 +195,49 @@ public class Login extends javax.swing.JFrame {
         x=evt.getX();
         y=evt.getY();
     }//GEN-LAST:event_jPanel1MousePressed
-
+    
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
-       String password,pword=txtpword.getText();
+        String username,uname=txtuname.getText();
+        String password,pword=txtpword.getText();
+        try{
+        String sql="SELECT `user_id` FROM `register` where user_name='"+txtuname.getText()+"'";
+        pst=con.prepareStatement(sql);
+        rs=pst.executeQuery();
+        if(rs.next()){
+            uid=rs.getString("user_id");
+        }
+        System.out.println("Login:"+uid);
+        }
+        catch(SQLException e){
+            
+        }
+       if(txtuname.getText().isEmpty()||pword.isEmpty()){
+           JOptionPane.showMessageDialog(null, "Field cannot be empty.");
+       }
+       else{
+           try{
+              String sql="SELECT `user_name` FROM `register`"; 
+              pst=con.prepareStatement(sql);
+              rs=pst.executeQuery();
+              while(rs.next()){
+                  username=(rs.getString("user_name"));
+                boolean b=uname.equalsIgnoreCase(username);
+                  if(b==true){
+                      a=true;
+                      break;
+                      }
+                  else{
+                      a=false;
+                    }
+              }
+              
+           }
+           catch(SQLException ex){
+               
+           }
+           if(a==false){
+                  JOptionPane.showMessageDialog(rootPane,"Invalid Username");
+              }
        try{
             String sql="SELECT `password` FROM `register` WHERE user_name='"+txtuname.getText()+"'";
         pst=con.prepareStatement(sql);
@@ -200,6 +246,7 @@ public class Login extends javax.swing.JFrame {
                 password=(rs.getString("password"));
                 if(password.equals(pword)){
                     Home ho=new Home();
+                    ho.getUid(uid);
                     ho.setVisible(true);
                     this.dispose();
                 }
@@ -208,8 +255,9 @@ public class Login extends javax.swing.JFrame {
                 }
         }
         }catch(HeadlessException | SQLException e){
-           System.out.println(e.getMessage());
+           
         }
+       }
     }//GEN-LAST:event_jPanel3MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
@@ -248,6 +296,7 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new Login().setVisible(true);
+            
         });
     }
 

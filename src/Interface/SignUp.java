@@ -5,10 +5,13 @@
  */
 package Interface;
 
+import static Interface.validate.isEmail;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,9 +26,13 @@ public class SignUp extends javax.swing.JFrame {
     PreparedStatement pst=null;
     ResultSet rs=null;
     Connection con;
+    boolean status=true;
     public SignUp() {
+        setUndecorated(true);
+        setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
         initComponents();
         con=DBConnect.connect();
+        autoId();
     }
 
     /**
@@ -44,14 +51,15 @@ public class SignUp extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtid = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtemail = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txtpw = new javax.swing.JPasswordField();
         txtcpw = new javax.swing.JPasswordField();
-        jLabel5 = new javax.swing.JLabel();
+        uid = new javax.swing.JLabel();
         txtuname = new javax.swing.JTextField();
+        uid1 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -113,16 +121,16 @@ public class SignUp extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(107, 107, 107)
+                .addGap(101, 101, 101)
                 .addComponent(jLabel4)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -134,62 +142,107 @@ public class SignUp extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Password");
 
+        txtemail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtemailFocusLost(evt);
+            }
+        });
+
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Confirm Password");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("ID");
+        txtpw.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtpwFocusLost(evt);
+            }
+        });
+
+        uid.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        uid.setForeground(new java.awt.Color(153, 153, 153));
+        uid.setText("UserId:");
+
+        txtuname.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtunameFocusLost(evt);
+            }
+        });
+        txtuname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtunameKeyReleased(evt);
+            }
+        });
+
+        uid1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        uid1.setForeground(new java.awt.Color(153, 153, 153));
+        uid1.setText("UserId:");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setText("Login");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel8)
-                        .addComponent(jLabel7)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel2)
-                        .addComponent(txtid)
-                        .addComponent(txtemail)
-                        .addComponent(txtpw)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtuname)))
-                .addContainerGap(21, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(txtcpw, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(uid1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(uid))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtcpw, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtuname, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel2)
+                                .addComponent(txtemail)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txtpw, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 11, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(127, 127, 127)
+                .addComponent(jLabel5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uid)
+                    .addComponent(uid1))
+                .addGap(34, 34, 34)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtuname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtpw, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtcpw, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 300, 430));
@@ -199,9 +252,7 @@ public class SignUp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        Home home=new Home();
-        home.setVisible(true);
-        this.dispose();
+            this.dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
@@ -214,22 +265,59 @@ public class SignUp extends javax.swing.JFrame {
          x=evt.getX();
          y=evt.getY();
     }//GEN-LAST:event_jPanel1MousePressed
-
+    private void autoId()
+    {
+        try
+        {
+            String sql="SELECT `user_id` FROM `register` ORDER BY user_id DESC LIMIT 1";
+            pst=con.prepareStatement(sql);
+            rs=pst.executeQuery();
+            if(rs.next())
+            {
+                String rnno=rs.getString("user_id");
+                int co=rnno.length();
+                String txt=rnno.substring(0,3);
+                String num=rnno.substring(3,co);
+                int n=Integer.parseInt(num);
+                n++;
+                String snum=Integer.toString(n);
+                String ftxt=txt+snum;
+                uid.setText(ftxt); 
+            }
+            else
+            {
+                uid.setText("uid1000");
+            }  
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(rootPane, e);
+            System.out.println(e.getMessage());
+        }
+    }
+    
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
-        String id = txtid.getText();
+        String userid = uid.getText();
         String username=txtuname.getText();
         String email=txtemail.getText();
         String password=txtpw.getText();
         String repass=txtcpw.getText();
+        if(username.isEmpty()||email.isEmpty()||password.isEmpty()||repass.isEmpty()){
+            JOptionPane.showMessageDialog(null,"Fields must not be empty.");
+        }
         
-        try{
-            String q="INSERT INTO `register`(`id`, `user_name`, `email`, `password`, `re_password`) VALUES (?,?,?,?,?)";
+        else{
+            if(!txtcpw.getText().equals(txtpw.getText())){
+            JOptionPane.showMessageDialog(null,"Password entered do not match.","Failed",JOptionPane.WARNING_MESSAGE);
+        }
+            else{
+                try{
+            String q="INSERT INTO `register`(`user_id`, `user_name`, `email`, `password`) VALUES (?,?,?,?)";
            pst=con.prepareStatement(q);
-           pst.setString(1,id);
+           pst.setString(1,userid);
            pst.setString(2,username);
            pst.setString(3,email);
            pst.setString(4,password);
-           pst.setString(5,repass);
            pst.execute();
            
            Login lo=new Login();
@@ -239,8 +327,78 @@ public class SignUp extends javax.swing.JFrame {
         }catch(SQLException e){
             
         }
+            }
+        }
+        
         
     }//GEN-LAST:event_jPanel3MouseClicked
+
+    private void txtemailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtemailFocusLost
+        if(status==true&&txtemail.getText().isEmpty()){
+            status=true;
+        }
+        else if(status==true){if(isEmail(txtemail.getText())==false){
+            status=false;
+           JOptionPane.showMessageDialog(null,"Please enter valid Email address","Failed",JOptionPane.WARNING_MESSAGE);
+           txtemail.setText("");
+           status=true;
+        }}
+        else{
+        status=true;
+        }
+    }//GEN-LAST:event_txtemailFocusLost
+
+    private void txtpwFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtpwFocusLost
+        if(status==true&&txtpw.getText().isEmpty()){
+            status=true;
+        }
+        else if(status==true){
+            if(txtpw.getText().length()<6){
+                status=false;
+            JOptionPane.showMessageDialog(null,"Enter at least 6 characters.");
+            txtpw.setText("");
+            status=true;
+        }
+        }
+        else{
+            status=true;
+        }
+    }//GEN-LAST:event_txtpwFocusLost
+
+    private void txtunameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtunameFocusLost
+        String username,uname=txtuname.getText();
+        try{
+              String sql="SELECT `user_name` FROM `register`"; 
+              pst=con.prepareStatement(sql);
+              rs=pst.executeQuery();
+              while(rs.next()){
+                  username=(rs.getString("user_name"));
+                boolean b=uname.equalsIgnoreCase(username);
+                  if(b==true){
+                      JOptionPane.showMessageDialog(null, "Username already exists.");
+                      txtuname.setText("");
+                      break;
+                      }
+                  else{
+                      status=true;
+                    }
+              }
+              
+           }
+           catch(SQLException ex){
+               
+           }
+    }//GEN-LAST:event_txtunameFocusLost
+
+    private void txtunameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtunameKeyReleased
+        status=false;
+    }//GEN-LAST:event_txtunameKeyReleased
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        Login login=new Login();
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -289,8 +447,9 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField txtcpw;
     private javax.swing.JTextField txtemail;
-    private javax.swing.JTextField txtid;
     private javax.swing.JPasswordField txtpw;
     private javax.swing.JTextField txtuname;
+    private javax.swing.JLabel uid;
+    private javax.swing.JLabel uid1;
     // End of variables declaration//GEN-END:variables
 }

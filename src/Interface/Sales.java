@@ -1,5 +1,8 @@
 package Interface;
 
+
+import static Interface.validate.*;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -38,7 +41,9 @@ public class Sales extends javax.swing.JInternalFrame {
     ArrayList<String> discount = new ArrayList<>();
     ArrayList<String> amountAfterDiscount = new ArrayList<>();
     
-    String iid,iname,iquantity,iunitprice,iamount,idiscount,billno,oldqty;
+    String iid,iname,iquantity,iunitprice,iamount,idiscount,billno,oldqty,chkqty;
+    
+    int a;
     
     public Sales() {
         initComponents();
@@ -69,8 +74,11 @@ public class Sales extends javax.swing.JInternalFrame {
             rs = pst.executeQuery();
             if (rs.next()) {
                 txtiname.setText(rs.getString("item_name"));
+                txtunitprice.setForeground(Color.blue);
                 txtunitprice.setText(rs.getString("sale_price"));
+                txtquantity.setForeground(Color.GREEN);
                 txtquantity.setText(rs.getString("quantity"));
+                chkqty=rs.getString("quantity");
 
                 byte[] imagedata = rs.getBytes("image");
                 format = new ImageIcon(imagedata);
@@ -234,6 +242,11 @@ public class Sales extends javax.swing.JInternalFrame {
             }
         });
 
+        txtquantity.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtquantityFocusGained(evt);
+            }
+        });
         txtquantity.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtquantityMouseClicked(evt);
@@ -352,8 +365,25 @@ public class Sales extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setText("Contact no.");
 
+        txtCustomerName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCustomerNameKeyReleased(evt);
+            }
+        });
+
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel9.setText("Name");
+
+        txtCustomerContact.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCustomerContactFocusLost(evt);
+            }
+        });
+        txtCustomerContact.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCustomerContactKeyReleased(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel10.setText("Address");
@@ -525,31 +555,52 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void txtiidKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtiidKeyReleased
         if (txtiid.getText() !=null) {
+            if(isItemid(txtiid.getText())==false){
+              txtiid.setText("");
+            JOptionPane.showMessageDialog(null,"Enter valid ItemId.");
+        }
             itemLoad();
         } else {
-            JOptionPane.showMessageDialog(rootPane,"Couldnot Load Data From Stock");
+            JOptionPane.showMessageDialog(rootPane,"Enter valid ItemId.");
         }
     }//GEN-LAST:event_txtiidKeyReleased
 
     private void txtquantityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtquantityKeyReleased
         double price = Double.parseDouble(txtunitprice.getText());
         int unit = Integer.parseInt(txtquantity.getText());
-        double tprice = price * unit;
-        txtsubtotal.setText(tprice + "");
+        if(unit>Integer.parseInt(chkqty)||unit==0){
+            JOptionPane.showMessageDialog(null, "Enter valid quantity.");
+            txtsubtotal.setText("");
+        }
+        else{
+            double tprice = price * unit;
+            txtsubtotal.setText(tprice + "");
+        }
     }//GEN-LAST:event_txtquantityKeyReleased
 
     private void txtdiscountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdiscountKeyReleased
         double d = Double.parseDouble(txtdiscount.getText());
         double t = Double.parseDouble(txtsubtotal.getText());
-        double p = t - d;
+        if(d>t){
+        JOptionPane.showMessageDialog(null, "Discount cannot be greater then totalAmt.");
+        txtdiscount.setText("");
+        txttotalAmount.setText("");
+        }
+        else{
+            double p = t - d;
         txttotalAmount.setText(p + "");
+        }  
     }//GEN-LAST:event_txtdiscountKeyReleased
 
     private void txtcashKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcashKeyReleased
-        double cashs = Double.parseDouble(txtcash.getText());
-        double paybles = Double.parseDouble(txttotalAmount.getText());
-        double balances = paybles - cashs;
-        txtbalance.setText(balances + "");      
+        if(isWord(txtcash.getText())==true){
+              txtcash.setText("");
+            JOptionPane.showMessageDialog(null,"Enter Valid Amount.");
+        }
+        else{
+        double balances = Double.parseDouble(txttotalAmount.getText()) - Double.parseDouble(txtcash.getText());
+        txtbalance.setText(balances + "");  
+        }    
     }//GEN-LAST:event_txtcashKeyReleased
     private void addtoTotalSalesDB(){
         try {
@@ -575,7 +626,10 @@ public class Sales extends javax.swing.JInternalFrame {
     }
     
     private void salesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_salesButtonMouseClicked
-        addtoCustomerDetailDB();
+        if(txtcash.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Field must not be empty");
+        }else{
+            addtoCustomerDetailDB();
         addtoTotalSalesDB();
         totalAmount=0.0;
         int input=JOptionPane.showConfirmDialog( null,"Sales Completed."+"Do you want to print the bill?","Select an option",JOptionPane.YES_NO_OPTION);
@@ -596,6 +650,7 @@ public class Sales extends javax.swing.JInternalFrame {
         else{
             clearData();
             autoId();
+        }
         }
     }//GEN-LAST:event_salesButtonMouseClicked
     
@@ -678,6 +733,11 @@ public class Sales extends javax.swing.JInternalFrame {
         iquantity=txtquantity.getText();iamount=txtsubtotal.getText();
         idiscount=txtdiscount.getText();
         billno=lblbill.getText();
+        if(txtCustomerName.getText().isEmpty()||txtCustomerAddress.getText().isEmpty()||txtCustomerContact.getText().isEmpty()
+                ||iid.isEmpty()||iname.isEmpty()||iunitprice.isEmpty()||iquantity.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Fields must not be empty.");
+        }
+        else{
         //amount after discount
         amtAfterDiscount = Double.parseDouble(txtsubtotal.getText()) - Double.parseDouble(txtdiscount.getText());
         totalAmount = totalAmount + amtAfterDiscount;
@@ -691,6 +751,7 @@ public class Sales extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(rootPane,e);
         }
         clear();
+        }  
     }//GEN-LAST:event_addButtonMouseClicked
     
     public PageFormat getPageFormat(PrinterJob pj){
@@ -717,7 +778,7 @@ public class Sales extends javax.swing.JInternalFrame {
     protected static double toPPI(double inch){
         return inch*72d;
     }
-    
+
     public class BillPrintable implements Printable{
         @Override
         public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -770,8 +831,40 @@ public class Sales extends javax.swing.JInternalFrame {
         
     }
     private void txtquantityMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtquantityMouseClicked
+        txtquantity.setForeground(Color.BLACK);
         txtquantity.setText("");
     }//GEN-LAST:event_txtquantityMouseClicked
+
+    private void txtquantityFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtquantityFocusGained
+        txtquantity.setForeground(Color.BLACK);
+        txtquantity.setText("");
+        txtquantity.setCaretPosition(0);
+    }//GEN-LAST:event_txtquantityFocusGained
+
+    private void txtCustomerNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerNameKeyReleased
+                if(isWord(txtCustomerName.getText())==false){
+              txtCustomerName.setText("");
+            JOptionPane.showMessageDialog(null,"Name must be in letters");
+        }
+    }//GEN-LAST:event_txtCustomerNameKeyReleased
+
+    private void txtCustomerContactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerContactKeyReleased
+        if(!txtCustomerContact.getText().startsWith("9")){
+            a=1;
+            txtCustomerContact.setText("");
+            JOptionPane.showMessageDialog(null, "Phone number should start with number 9");
+            a=0;
+        }
+    }//GEN-LAST:event_txtCustomerContactKeyReleased
+
+    private void txtCustomerContactFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerContactFocusLost
+        if(a!=1){
+            if(txtCustomerContact.getText().length()!=10)
+            JOptionPane.showMessageDialog(null, "Phone Number must contain 10 digit");
+        }
+        else{
+        }
+    }//GEN-LAST:event_txtCustomerContactFocusLost
                  
     private void autoId() {
         try {
@@ -785,8 +878,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 int n = Integer.parseInt(num);
                 n++;
                 String snum = Integer.toString(n);
-                String ftxt =  snum;
-                lblbill.setText(ftxt);
+                lblbill.setText(snum);
             } else {
                 lblbill.setText("1000");
             }
